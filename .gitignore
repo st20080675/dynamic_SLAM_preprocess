@@ -1,3 +1,4 @@
-__pycache_
+__pycache__
 logs
 weights
+.idea
