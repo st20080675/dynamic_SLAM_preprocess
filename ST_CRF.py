@@ -33,16 +33,16 @@ class STCRFLayer():
             num_cores = os.cpu_count()
             self.pool = Pool(processes=num_cores)
 
-    def run(self, sm_mask, img):
+    def run(self, sm_mask, img, depth = None):
         self.mask_size = [sm_mask.shape[-2], sm_mask.shape[-1]]
         self.input_size = [img.shape[-3], img.shape[-2]]
 
         if self.flag_multi_process:
-            return self.run_parallel(sm_mask, img)
+            return self.run_parallel(sm_mask, img, depth)
         else:
-            return self.run_single(sm_mask, img)
+            return self.run_single(sm_mask, img, depth)
 
-    def run_single(self, sm_mask, img): # the input array are detached numpy already
+    def run_single(self, sm_mask, img, depth): # the input array are detached numpy already
         batch_size = sm_mask.shape[0]
         result_big = np.zeros((sm_mask.shape[0], sm_mask.shape[1], self.input_size[0], self.input_size[1]))
         result_small = np.zeros(sm_mask.shape)
@@ -59,13 +59,17 @@ class STCRFLayer():
             # d.addPairwiseBilateral(sxy=(30,30), srgb=(13,13,13), rgbim=img[i].astype(np.uint8), compat=20, kernel=dcrf.DIAG_KERNEL, normalization=dcrf.NORMALIZE_SYMMETRIC)
             d.addPairwiseBilateral(sxy=(80,80), srgb=(13,13,13), rgbim=img[i].astype(np.uint8), compat=10, kernel=dcrf.DIAG_KERNEL, normalization=dcrf.NORMALIZE_SYMMETRIC)
 
+            if not (depth is None):
+                pairwise_depth_energy = create_pairwise_bilateral(sdims=(10,10), schan=(0.01,), img=depth[i].reshape((depth[i].shape[0], depth[i].shape[1], 1)), chdim=2)
+                d.addPairwiseEnergy(pairwise_depth_energy, compat=10)
+
             Q = d.inference(self.num_iter)
             result_big[i] = np.array(Q).reshape((self.num_class, self.input_size[0], self.input_size[1]))
             result_small[i] = np.transpose(resize(np.transpose(result_big[i],[1,2,0]), self.mask_size, mode='constant'), [2,0,1])
 
         return result_big, result_small
 
-    def run_parallel(self, sm_mask, img): # flag_train is for the strange dif between train & test in org SEC
+    def run_parallel(self, sm_mask, img, depth): # flag_train is for the strange dif between train & test in org SEC
         batch_size = sm_mask.shape[0]
         result_big = np.zeros((sm_mask.shape[0], sm_mask.shape[1], self.input_size[0], self.input_size[1]))
         result_small = np.zeros(sm_mask.shape)

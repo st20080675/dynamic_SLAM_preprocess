@@ -34,10 +34,15 @@ def get_args():
                         help='need mask even training')
     # from lei
     parser.add_argument('--data_dir', type=str,
-                        default="/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_walking_xyz/",
+                        default="/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_walking_halfsphere/",
                         help='data loading directory')
     parser.add_argument('--data_file', type=str, default="rgb_name_only.txt",
                         help='.txt file contain images from subdir from data_dir')
+
+    parser.add_argument('--use_depth', default=False,
+                        help='whether use depth for CRF and dataloader')
+    parser.add_argument('--depth_data_file', type=str, default="depth_name_only.txt",
+                        help='.txt file contain depth images from subdir from data_dir')
     parser.add_argument('--root_dir', type=str, default="/home/sunting/Documents/program/dynamic_SLAM_preprocess",
                         help='root dir')
     parser.add_argument('--model', type=str, default="resnet38",  # resnet SEC
@@ -45,7 +50,7 @@ def get_args():
     parser.add_argument('--colorgray', type=str, default="color",
                         help='color|gray for cls')
     parser.add_argument('--save_path', type=str,
-                        default="masked",
+                        default="blurred",
                         help='save path')
 
 

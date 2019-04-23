@@ -14,9 +14,12 @@ import ST_CRF
 
 if __name__=="__main__":
     args = get_args()
-    sys.path.append(args.root_dir)
+    sys.path.append('./..')
+    args.save_path = "mask_w_color_depth"
+    args.use_depth = True
+    args.batch_size = 1
 
-    flag_visual = True
+    flag_visual = False
     if args.origin_size or flag_visual:
         args.batch_size = 1
 
@@ -60,6 +63,9 @@ if __name__=="__main__":
             raw = data['raw']
             name = data["name"]
 
+            if args.use_depth:
+                depth = data['depth']
+
             if flag_use_cuda:
                 inputs = inputs.cuda()
 
@@ -70,7 +76,10 @@ if __name__=="__main__":
             mask_mended = sm_mask.detach().cpu().numpy()
 
             # result big shape
-            result_big, result_small = st_crf_layer.run(mask_mended, img.numpy())
+            if args.use_depth:
+                result_big, result_small = st_crf_layer.run(mask_mended, img.numpy(), depth.numpy())
+            else:
+                result_big, result_small = st_crf_layer.run(mask_mended, img.numpy())
 
             for i in range(result_big.shape[0]):
 
@@ -82,16 +91,27 @@ if __name__=="__main__":
 
 
             if flag_visual:
-                plt.subplot(1, 3, 1)
-                plt.imshow(raw[0])
-                plt.subplot(1, 3, 2)
-                raw_mask_pred = np.argmax(mask_mended[0], axis=0)
-                plt.imshow(raw_mask_pred)
-                plt.subplot(1, 3, 3)
-                plt.imshow(mask_pre)
-                # plt.close('all')
+                if args.use_depth:
+                    plt.subplot(1, 4, 1)
+                    plt.imshow(raw[0])
+                    plt.subplot(1, 4, 2)
+                    raw_mask_pred = np.argmax(mask_mended[0], axis=0)
+                    plt.imshow(raw_mask_pred)
+                    plt.subplot(1, 4, 3)
+                    plt.imshow(depth.numpy()[0])
+                    plt.subplot(1, 4, 4)
+                    plt.imshow(mask_pre)
+                else:
+                    plt.subplot(1, 3, 1)
+                    plt.imshow(raw[0])
+                    plt.subplot(1, 3, 2)
+                    raw_mask_pred = np.argmax(mask_mended[0], axis=0)
+                    plt.imshow(raw_mask_pred)
+                    plt.subplot(1, 3, 3)
+                    plt.imshow(mask_pre)
+                    # plt.close('all')
 
 
-                # Image.fromarray(mask_pre.astype(np.uint8)).save('{}/{}/{}.png'.format(args.data_dir, args.save_path, name))
+            Image.fromarray(mask_pre.astype(np.uint8)).save('{}{}/{}'.format(args.data_dir, args.save_path, name[0]))
 
 
