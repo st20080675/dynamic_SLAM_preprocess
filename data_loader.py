@@ -32,6 +32,7 @@ class VOCDataset(Dataset):
         self.args = args
         self.list_file = args.data_file
         self.depth_list_file = args.depth_data_file
+        self.associated_file = args.associate_data_file
         self.no_bg = args.no_bg
         self.data_dir = args.data_dir
         self.use_depth = args.use_depth
@@ -40,9 +41,13 @@ class VOCDataset(Dataset):
         self.num_classes = args.num_classes
         self.transform = transform
         # self.need_mask = args.need_mask_flag
-        self.file_list = self._get_file_list()
+
         if self.use_depth:
-            self.depth_file_list = self._get_depth_file_list()
+            # self.depth_file_list = self._get_depth_file_list()
+            self.associated_file_list = self._get_associated_file_list()
+        else:
+            self.file_list = self._get_file_list()
+
 
 
     def _get_file_list(self):
@@ -57,34 +62,30 @@ class VOCDataset(Dataset):
             all_files = f.readlines()
             return [item.split()[0] for item in all_files]
 
+    def _get_associated_file_list(self):
+        with open(os.path.join(self.data_dir, self.associated_file),
+                  "r") as f:
+            all_files = f.readlines()
+            return [item.split() for item in all_files]
+
     def __len__(self):
-        return len(self.file_list)
+        if self.use_depth:
+            return  len(self.associated_file_list)
+        else:
+            return len(self.file_list)
 
     def __getitem__(self, idx):
 
-        # if os.path.exists(os.path.join(self.data_dir,
-        #                                "JPEGImages",
-        #                                self.file_list[idx]+".jpg")):
-        img_name = os.path.join(self.data_dir,
-                                self.file_list[idx])
-        # else:
-        #     img_name = os.path.join(self.data_dir,
-        #                             "images",
-
-        img = Image.open(img_name)
-
         if self.use_depth:
-            depth_name = os.path.join(self.data_dir, self.depth_file_list[idx])
+            depth_name = os.path.join(self.data_dir, self.associated_file_list[idx][3])
             depth = Image.open(depth_name)
             # depth = ndimage.imread(depth_name)
+            img_name = os.path.join(self.data_dir, self.associated_file_list[idx][1])
+            img = Image.open(img_name)
+        else:
+            img_name = os.path.join(self.data_dir, self.file_list[idx])
+            img = Image.open(img_name)
 
-        if self.args.colorgray == "gray":
-            temp_rgb = np.array(img)
-            temp_gray = np.array(img.convert('L'))
-            temp_rgb[:, :, 0] = temp_gray
-            temp_rgb[:, :, 1] = temp_gray
-            temp_rgb[:, :, 2] = temp_gray
-            img = Image.fromarray(temp_rgb, mode='RGB')
 
         if self.args.origin_size:
             img_array = np.array(img).astype(np.float32)
@@ -99,7 +100,7 @@ class VOCDataset(Dataset):
         img_ts = self.transform(img)
 
         if self.use_depth:
-            return {"input": img_ts, "img": img_array, "raw": np.array(img), "name": self.file_list[idx], 'depth': depth}
+            return {"input": img_ts, "img": img_array, "raw": np.array(img), "name": self.associated_file_list[idx][1], 'depth': depth}
         else:
             return {"input": img_ts, "img": img_array, "raw": np.array(img), "name": self.file_list[idx]}
 

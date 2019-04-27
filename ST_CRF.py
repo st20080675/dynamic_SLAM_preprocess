@@ -27,7 +27,7 @@ class STCRFLayer():
         self.min_prob = 0.0001
         self.mask_size = [41, 41]
         self.input_size = [321, 321]
-        self.num_iter = 3
+        self.num_iter = 5
         self.flag_multi_process = flag_multi_process
         if flag_multi_process:
             num_cores = os.cpu_count()
@@ -57,11 +57,11 @@ class STCRFLayer():
 
             d.addPairwiseGaussian(sxy=(3,3), compat=3, kernel=dcrf.DIAG_KERNEL, normalization=dcrf.NORMALIZE_SYMMETRIC)
             # d.addPairwiseBilateral(sxy=(30,30), srgb=(13,13,13), rgbim=img[i].astype(np.uint8), compat=20, kernel=dcrf.DIAG_KERNEL, normalization=dcrf.NORMALIZE_SYMMETRIC)
-            d.addPairwiseBilateral(sxy=(80,80), srgb=(13,13,13), rgbim=img[i].astype(np.uint8), compat=10, kernel=dcrf.DIAG_KERNEL, normalization=dcrf.NORMALIZE_SYMMETRIC)
+            # d.addPairwiseBilateral(sxy=(80,80), srgb=(13,13,13), rgbim=img[i].astype(np.uint8), compat=10, kernel=dcrf.DIAG_KERNEL, normalization=dcrf.NORMALIZE_SYMMETRIC)
 
             if not (depth is None):
                 pairwise_depth_energy = create_pairwise_bilateral(sdims=(10,10), schan=(0.01,), img=depth[i].reshape((depth[i].shape[0], depth[i].shape[1], 1)), chdim=2)
-                d.addPairwiseEnergy(pairwise_depth_energy, compat=10)
+                d.addPairwiseEnergy(pairwise_depth_energy, compat=15)
 
             Q = d.inference(self.num_iter)
             result_big[i] = np.array(Q).reshape((self.num_class, self.input_size[0], self.input_size[1]))

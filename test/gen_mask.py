@@ -15,7 +15,8 @@ import ST_CRF
 if __name__=="__main__":
     args = get_args()
     sys.path.append('./..')
-    args.save_path = "mask_w_color_depth"
+    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_walking_xyz/"
+    args.save_path = "mask_w_depth"
     args.use_depth = True
     args.batch_size = 1
 
