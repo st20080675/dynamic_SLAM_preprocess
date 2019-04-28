@@ -32,17 +32,21 @@ def get_args():
                         help='when it is training')
     parser.add_argument('--need_mask_flag', action='store_true', default=False,
                         help='need mask even training')
-    # from lei
+
     parser.add_argument('--data_dir', type=str,
                         default="/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_rpy/",
                         help='data loading directory')
     parser.add_argument('--data_file', type=str, default="rgb_name_only.txt",
                         help='.txt file contain images from subdir from data_dir')
+    parser.add_argument('--kitti_image_folder', type=str, default="image_2",
+                        help='the image folder')
 
     parser.add_argument('--use_depth', default=False,
                         help='whether use depth for CRF and dataloader')
     parser.add_argument('--depth_data_file', type=str, default="depth_name_only.txt",
                         help='.txt file contain depth images from subdir from data_dir')
+    parser.add_argument('--data_set', type=str, default="TUM",
+                        help='dataset')
     parser.add_argument('--associate_data_file', type=str, default="associate_list.txt",
                         help='.txt file contain associated images and depth from subdir from data_dir')
 
