@@ -7,6 +7,7 @@ import pickle
 from PIL import Image
 import random
 import scipy.ndimage as ndimage
+import glob
 
 
 class VOCData():
@@ -19,11 +20,18 @@ class VOCData():
                 transforms.Normalize([0.485, 0.456, 0.406],
                                      [0.229, 0.224, 0.225])])
 
-        self.dataloaders = {"data": torch.utils.data.DataLoader(
-            VOCDataset(args, self.data_transforms),
-            batch_size=args.batch_size,
-            shuffle=False,
-            num_workers=4)}
+        if args.data_set == 'TUM':
+            self.dataloaders = {"data": torch.utils.data.DataLoader(
+                VOCDataset(args, self.data_transforms),
+                batch_size=args.batch_size,
+                shuffle=False,
+                num_workers=4)}
+        elif args.data_set == 'KITTI':
+            self.dataloaders = {"data": torch.utils.data.DataLoader(
+                VOCDataset_kitti(args, self.data_transforms),
+                batch_size=args.batch_size,
+                shuffle=False,
+                num_workers=4)}
 
 
 class VOCDataset(Dataset):
@@ -47,8 +55,6 @@ class VOCDataset(Dataset):
             self.associated_file_list = self._get_associated_file_list()
         else:
             self.file_list = self._get_file_list()
-
-
 
     def _get_file_list(self):
         with open(os.path.join(self.data_dir, self.list_file),
@@ -104,3 +110,41 @@ class VOCDataset(Dataset):
         else:
             return {"input": img_ts, "img": img_array, "raw": np.array(img), "name": self.file_list[idx]}
 
+
+
+class VOCDataset_kitti(Dataset):
+
+    def __init__(self, args, transform=None):
+        self.args = args
+        self.no_bg = args.no_bg
+        self.data_dir = args.data_dir
+        self.use_depth = args.use_depth
+        self.kitti_image_folder = args.kitti_image_folder
+        self.input_size = args.input_size
+        self.num_classes = args.num_classes
+        self.transform = transform
+        self.file_list = self._get_file_list()
+
+    def _get_file_list(self):
+        data_path = os.path.join(self.data_dir, self.kitti_image_folder)
+        file_list = glob.glob(data_path+'/*')
+        file_list.sort()
+        return file_list
+
+    def __len__(self):
+        return len(self.file_list)
+
+    def __getitem__(self, idx):
+
+        img_name = os.path.join(self.data_dir, self.file_list[idx])
+        img = Image.open(img_name)
+
+        if self.args.origin_size:
+            img_array = np.array(img).astype(np.float32)
+
+        else:
+            img_array = np.array(img.resize(self.input_size)).astype(np.float32)
+
+        img_ts = self.transform(img)
+
+        return {"input": img_ts, "img": img_array, "raw": np.array(img), "name": self.file_list[idx][-21:]}

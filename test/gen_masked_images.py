@@ -18,11 +18,11 @@ if __name__=="__main__":
     sys.path.append('./..')
     flag_visualization = False
     flag_mask_method = 'gray' # blur (gaussain)
-    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_halfsphere/"
+    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_walking_halfsphere/"
 
     blur_img_path = 'blurred'
-    seg_mask_path = 'mask_w_color_depth'
-    save_masked_path = 'masked_w_color_depth'
+    seg_mask_path = 'mask_w_depth'
+    save_masked_path = 'masked_w_depth'
     move_class = [15] # [5, 9, 15]
 
 
