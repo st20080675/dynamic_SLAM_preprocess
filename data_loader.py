@@ -147,4 +147,4 @@ class VOCDataset_kitti(Dataset):
 
         img_ts = self.transform(img)
 
-        return {"input": img_ts, "img": img_array, "raw": np.array(img), "name": self.file_list[idx][-21:]}
+        return {"input": img_ts, "img": img_array, "raw": np.array(img), "name": self.file_list[idx][-18:]}
