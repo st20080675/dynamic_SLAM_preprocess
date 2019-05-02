@@ -25,9 +25,9 @@ if __name__=="__main__":
     sys.path.append('./..')
     flag_visualization = True
     args.associate_data_file = "associate_list.txt"
-    args.data_set = 'KITTI'  #'TUM' # 'KITTI'
-    # args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_static/"
-    args.data_dir = "/media/sunting/sun/kitti_sequence/01/"
+    args.data_set = 'TUM'  #'TUM' # 'KITTI'
+    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_static/"
+    # args.data_dir = "/media/sunting/sun/kitti_sequence/01/"
     args.kitti_image_folder = "image_0"
 
     seg_mask_path = 'mask_w_depth'

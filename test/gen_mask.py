@@ -9,13 +9,14 @@ import os
 import matplotlib.pyplot as plt
 import ST_adaptive_CRF
 import ST_CRF
+import os
 
 
 
 if __name__=="__main__":
     args = get_args()
     sys.path.append('./..')
-    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_static/"
+    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_rpy/"
     # args.data_dir = "/media/sunting/sun/kiti_sequence/01/"
     args.save_path = "mask_w_depth"
     args.use_depth = True
@@ -60,7 +61,7 @@ if __name__=="__main__":
 
     net_seg.train(False)
 
-    save_dir = os.path.join(args.data_dir, args.save_path)
+    save_dir = os.path.join(args.data_dir, args.save_path, 'rgb')
     if not os.path.exists(save_dir):
         os.mkdir(save_dir)
 
