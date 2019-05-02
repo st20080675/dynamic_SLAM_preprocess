@@ -15,13 +15,16 @@ import ST_CRF
 if __name__=="__main__":
     args = get_args()
     sys.path.append('./..')
+
     # args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_walking_halfsphere/"
-    args.data_dir = "/data_shared/Docker/tsun/docker/program/dynamic_SLAM_preprocess/data/KITTI/04/"
+    args.data_dir = "/data_shared/Docker/tsun/docker/program/dynamic_SLAM_preprocess/data/KITTI/05/"
+
     args.save_path = "mask_w_depth"
-    args.use_depth = False
+    args.use_depth = True
     args.batch_size = 1
+
     args.data_set = 'KITTI'
-    args.kitti_image_folder = "image_3"
+    args.kitti_image_folder = "image_2"
 
     if args.data_set == 'KITTI':
         args.use_depth = False
@@ -60,9 +63,13 @@ if __name__=="__main__":
 
     net_seg.train(False)
 
-    save_dir = os.path.join(args.data_dir, args.save_path)
+    if args.data_set == 'KITTI':
+    	save_dir = os.path.join(args.data_dir, args.save_path, args.kitti_image_folder)
+    else:
+    	save_dir = os.path.join(args.data_dir, args.save_path)
+   
     if not os.path.exists(save_dir):
-        os.mkdir(save_dir)
+        os.makedirs(save_dir, exist_ok=True)
 
     # log_args(args, logger)
     with torch.no_grad():
