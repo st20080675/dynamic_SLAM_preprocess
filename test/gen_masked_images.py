@@ -24,9 +24,9 @@ if __name__=="__main__":
     sys.path.append('./..')
     flag_visualization = False
     flag_mask_method = 'gray' # blur (gaussain)
-    args.data_set = 'KITTI'  #'TUM' # 'KITTI'
-    # args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_static/"
-    args.data_dir = "/media/sunting/sun/kiti_sequence/01/"
+    args.data_set = 'TUM'  #'TUM' # 'KITTI'
+    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_xyz/"
+    # args.data_dir = "/media/sunting/sun/kiti_sequence/01/"
     args.kitti_image_folder = "image_1"
 
     blur_img_path = 'blurred'
@@ -39,6 +39,10 @@ if __name__=="__main__":
         move_class = [1,2,6,7,14,15]
         seg_mask_path = 'mask_w_color'
         save_masked_path = 'masked_w_color'
+
+    	save_dir = os.path.join(args.data_dir, save_masked_path, args.kitti_image_folder)
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir, exist_ok=True)
 
         for i_img in file_list:
             img_name = os.path.join(args.data_dir, i_img)
@@ -74,6 +78,9 @@ if __name__=="__main__":
 
     elif args.data_set == 'TUM':
         file_list = get_TUM_image_list(args.data_dir, args.associate_data_file)
+        save_dir = os.path.join(args.data_dir, save_masked_path, 'rgb')
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir, exist_ok=True)
 
         for i_img in file_list:
             img_name = os.path.join(args.data_dir, i_img[1])
