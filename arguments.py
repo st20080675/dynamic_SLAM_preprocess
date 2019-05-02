@@ -38,7 +38,7 @@ def get_args():
                         help='data loading directory')
     parser.add_argument('--data_file', type=str, default="rgb_name_only.txt",
                         help='.txt file contain images from subdir from data_dir')
-    parser.add_argument('--kitti_image_folder', type=str, default="image_2",
+    parser.add_argument('--kitti_image_folder', type=str, default="image_3",
                         help='the image folder')
 
     parser.add_argument('--use_depth', default=False,

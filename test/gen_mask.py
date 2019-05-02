@@ -16,19 +16,19 @@ if __name__=="__main__":
     args = get_args()
     sys.path.append('./..')
     # args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_walking_halfsphere/"
-    args.data_dir = "/media/sunting/sun/kiti_sequence/01/"
+    args.data_dir = "/data_shared/Docker/tsun/docker/program/dynamic_SLAM_preprocess/data/KITTI/04/"
     args.save_path = "mask_w_depth"
     args.use_depth = False
     args.batch_size = 1
     args.data_set = 'KITTI'
+    args.kitti_image_folder = "image_3"
 
     if args.data_set == 'KITTI':
         args.use_depth = False
         args.input_size = [200, 600]
         args.save_path = "mask_w_color"
 
-
-    flag_visual = True
+    flag_visual = False
     if args.origin_size or flag_visual:
         args.batch_size = 1
 
@@ -121,6 +121,6 @@ if __name__=="__main__":
                     # plt.close('all')
 
 
-            # Image.fromarray(mask_pre.astype(np.uint8)).save('{}{}/{}'.format(args.data_dir, args.save_path, name[0]))
+            Image.fromarray(mask_pre.astype(np.uint8)).save('{}{}/{}'.format(args.data_dir, args.save_path, name[0]))
 
 
