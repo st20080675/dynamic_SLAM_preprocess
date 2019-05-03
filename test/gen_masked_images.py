@@ -39,7 +39,7 @@ if __name__=="__main__":
         move_class = [1,2,6,7,14,15]
         seg_mask_path = 'mask_w_color'
         save_masked_path = 'masked_w_color'
-	save_dir = os.path.join(args.data_dir, save_masked_path, args.kitti_image_folder)
+        save_dir = os.path.join(args.data_dir, save_masked_path, args.kitti_image_folder)
         if not os.path.exists(save_dir):
             os.makedirs(save_dir, exist_ok=True)
 
