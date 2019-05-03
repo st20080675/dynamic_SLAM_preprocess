@@ -16,11 +16,11 @@ import os
 if __name__=="__main__":
     args = get_args()
     sys.path.append('./..')
-    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_rpy/"
+    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_xyz/"
     # args.data_dir = "/media/sunting/sun/kiti_sequence/01/"
-    args.save_path = "mask_w_depth"
-    args.use_depth = True
-    args.batch_size = 1
+    args.save_path = "mask_w_color"
+    args.use_depth = False
+    args.batch_size = 2
     args.data_set = 'TUM' # 'KITTI'
 
     if args.data_set == 'KITTI':
@@ -63,8 +63,7 @@ if __name__=="__main__":
 
     save_dir = os.path.join(args.data_dir, args.save_path, 'rgb')
     if not os.path.exists(save_dir):
-        os.mkdir(save_dir)
-
+        os.makedirs(save_dir, exist_ok=True)
     # log_args(args, logger)
     with torch.no_grad():
         for data in dataloader.dataloaders['data']:
@@ -98,6 +97,7 @@ if __name__=="__main__":
                     (raw[i].size(0), raw[i].size(1)),
                     order=0)
                 mask_pre = np.argmax(raw_image_big, axis=2)
+                Image.fromarray(mask_pre.astype(np.uint8)).save('{}{}/{}'.format(args.data_dir, args.save_path, name[i]))
 
 
             if flag_visual:
@@ -122,6 +122,6 @@ if __name__=="__main__":
                     # plt.close('all')
 
 
-            Image.fromarray(mask_pre.astype(np.uint8)).save('{}{}/{}'.format(args.data_dir, args.save_path, name[0]))
+
 
 
