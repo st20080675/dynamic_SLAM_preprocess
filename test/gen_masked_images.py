@@ -24,9 +24,9 @@ if __name__=="__main__":
     sys.path.append('./..')
     flag_visualization = False
     flag_mask_method = 'gray' # blur (gaussain)
-    args.data_set = 'TUM'  #'TUM' # 'KITTI'
-    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_xyz/"
-    # args.data_dir = "/media/sunting/sun/kiti_sequence/01/"
+    args.data_set = 'KITTI'  #'TUM' # 'KITTI'
+    # args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_xyz/"
+    args.data_dir = "/data_shared/Docker/tsun/docker/program/dynamic_SLAM_preprocess/data/KITTI/01"
     args.kitti_image_folder = "image_1"
 
     blur_img_path = 'blurred'
@@ -39,8 +39,7 @@ if __name__=="__main__":
         move_class = [1,2,6,7,14,15]
         seg_mask_path = 'mask_w_color'
         save_masked_path = 'masked_w_color'
-
-    	save_dir = os.path.join(args.data_dir, save_masked_path, args.kitti_image_folder)
+	save_dir = os.path.join(args.data_dir, save_masked_path, args.kitti_image_folder)
         if not os.path.exists(save_dir):
             os.makedirs(save_dir, exist_ok=True)
 

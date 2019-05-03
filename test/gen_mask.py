@@ -16,6 +16,7 @@ import os
 if __name__=="__main__":
     args = get_args()
     sys.path.append('./..')
+
     args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_xyz/"
     # args.data_dir = "/media/sunting/sun/kiti_sequence/01/"
     args.save_path = "mask_w_color"
@@ -23,11 +24,13 @@ if __name__=="__main__":
     args.batch_size = 2
     args.data_set = 'TUM' # 'KITTI'
 
+    args.kitti_image_folder = "image_3"
+
+
     if args.data_set == 'KITTI':
         args.use_depth = False
         args.input_size = [200, 600]
         args.save_path = "mask_w_color"
-
 
     flag_visual = False
     if args.origin_size or flag_visual:
@@ -61,9 +64,14 @@ if __name__=="__main__":
 
     net_seg.train(False)
 
-    save_dir = os.path.join(args.data_dir, args.save_path, 'rgb')
+    if args.data_set == 'KITTI':
+    	save_dir = os.path.join(args.data_dir, args.save_path, args.kitti_image_folder)
+    else:
+    	save_dir = os.path.join(args.data_dir, args.save_path)
+   
     if not os.path.exists(save_dir):
         os.makedirs(save_dir, exist_ok=True)
+
     # log_args(args, logger)
     with torch.no_grad():
         for data in dataloader.dataloaders['data']:
