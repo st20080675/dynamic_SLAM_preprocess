@@ -23,11 +23,11 @@ def get_KITTI_image_list(data_dir, kitti_image_folder):
 if __name__=="__main__":
     args = get_args()
     sys.path.append('./..')
-    flag_visualization = True
+    flag_visualization = False
     args.associate_data_file = "associate_list.txt"
-    args.data_set = 'KITTI'  #'TUM' # 'KITTI'
-    # args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_static/"
-    args.data_dir = "/media/sunting/sun/kitti_sequence/01/"
+    args.data_set = 'TUM'  #'TUM' # 'KITTI'
+    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_xyz/"
+    # args.data_dir = "/media/sunting/sun/kitti_sequence/01/"
     args.kitti_image_folder = "image_0"
 
     seg_mask_path = 'mask_w_depth'
@@ -39,6 +39,9 @@ if __name__=="__main__":
         move_class = [1,2,6,7,14,15]
         seg_mask_path = 'mask_w_color'
         save_mask_path = 'mask_dilated_w_color'
+        save_dir = os.path.join(args.data_dir, save_mask_path, args.kitti_image_folder)
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir, exist_ok=True)
 
         for i_img in file_list:
             mask_name = os.path.join(args.data_dir, seg_mask_path, i_img[-18:])
@@ -65,6 +68,9 @@ if __name__=="__main__":
 
     elif args.data_set == 'TUM':
         file_list = get_image_list(args.data_dir, args.associate_data_file)
+        save_dir = os.path.join(args.data_dir, save_mask_path, 'rgb')
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir, exist_ok=True)
 
         for i_img in file_list:
             mask_name = os.path.join(args.data_dir, seg_mask_path, i_img[1])

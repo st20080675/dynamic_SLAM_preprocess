@@ -9,6 +9,7 @@ import os
 import matplotlib.pyplot as plt
 import ST_adaptive_CRF
 import ST_CRF
+import os
 
 
 
@@ -24,7 +25,7 @@ if __name__=="__main__":
     args.batch_size = 1
 
     args.data_set = 'KITTI'
-    args.kitti_image_folder = "image_2"
+    args.kitti_image_folder = "image_3"
 
     if args.data_set == 'KITTI':
         args.use_depth = False
