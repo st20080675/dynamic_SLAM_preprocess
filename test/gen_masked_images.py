@@ -77,7 +77,7 @@ if __name__=="__main__":
 
     elif args.data_set == 'TUM':
         file_list = get_TUM_image_list(args.data_dir, args.associate_data_file)
-        save_dir = os.path.join(args.data_dir, save_masked_path, 'rgb')
+	save_dir = os.path.join(args.data_dir, save_masked_path, 'rgb')
         if not os.path.exists(save_dir):
             os.makedirs(save_dir, exist_ok=True)
 

@@ -17,14 +17,15 @@ if __name__=="__main__":
     args = get_args()
     sys.path.append('./..')
 
-    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_xyz/"
+    # args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_xyz/"
     # args.data_dir = "/media/sunting/sun/kiti_sequence/01/"
+    args.data_dir = "/data_shared/Docker/tsun/docker/program/dynamic_SLAM_preprocess/data/KITTI/00"
     args.save_path = "mask_w_color"
     args.use_depth = False
-    args.batch_size = 2
-    args.data_set = 'TUM' # 'KITTI'
+    args.batch_size = 8
+    args.data_set = 'KITTI' # 'KITTI'
 
-    args.kitti_image_folder = "image_3"
+    args.kitti_image_folder = "image_2"
 
 
     if args.data_set == 'KITTI':
@@ -105,7 +106,7 @@ if __name__=="__main__":
                     (raw[i].size(0), raw[i].size(1)),
                     order=0)
                 mask_pre = np.argmax(raw_image_big, axis=2)
-                Image.fromarray(mask_pre.astype(np.uint8)).save('{}{}/{}'.format(args.data_dir, args.save_path, name[i]))
+                Image.fromarray(mask_pre.astype(np.uint8)).save('{}/{}/{}'.format(args.data_dir, args.save_path, name[i]))
 
 
             if flag_visual:
