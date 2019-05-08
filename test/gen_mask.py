@@ -10,18 +10,20 @@ import matplotlib.pyplot as plt
 import ST_adaptive_CRF
 import ST_CRF
 import os
-
+import time
 
 
 if __name__=="__main__":
     args = get_args()
     sys.path.append('./..')
 
-    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_halfsphere/"
+    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_walking_xyz_validation/"
+    # args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_xyz/"
     # args.data_dir = "/media/sunting/sun/kiti_sequence/01/"
+    # args.data_dir = "/data_shared/Docker/tsun/docker/program/dynamic_SLAM_preprocess/data/KITTI/10"
     args.save_path = "mask_w_color"
     args.use_depth = False
-    args.batch_size = 2
+    args.batch_size = 2 #40
     args.data_set = 'TUM' # 'KITTI'
 
     args.kitti_image_folder = "image_3"
@@ -65,14 +67,17 @@ if __name__=="__main__":
     net_seg.train(False)
 
     if args.data_set == 'KITTI':
-    	save_dir = os.path.join(args.data_dir, args.save_path, args.kitti_image_folder)
+        save_dir = os.path.join(args.data_dir, args.save_path, args.kitti_image_folder)
     else:
-    	save_dir = os.path.join(args.data_dir, args.save_path)
+        save_dir = os.path.join(args.data_dir, args.save_path, 'rgb')
    
     if not os.path.exists(save_dir):
         os.makedirs(save_dir, exist_ok=True)
 
     # log_args(args, logger)
+    print(len(dataloader.dataloaders['data']))
+    time_start = time.time()
+    print(args)
     with torch.no_grad():
         for data in dataloader.dataloaders['data']:
             inputs = data['input']
@@ -105,7 +110,7 @@ if __name__=="__main__":
                     (raw[i].size(0), raw[i].size(1)),
                     order=0)
                 mask_pre = np.argmax(raw_image_big, axis=2)
-                Image.fromarray(mask_pre.astype(np.uint8)).save('{}{}/{}'.format(args.data_dir, args.save_path, name[i]))
+                Image.fromarray(mask_pre.astype(np.uint8)).save('{}/{}/{}'.format(args.data_dir, args.save_path, name[i]))
 
 
             if flag_visual:
@@ -129,7 +134,7 @@ if __name__=="__main__":
                     plt.imshow(mask_pre)
                     # plt.close('all')
 
-
+    print(time.time()-time_start)
 
 
 
