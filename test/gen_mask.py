@@ -17,7 +17,7 @@ if __name__=="__main__":
     args = get_args()
     sys.path.append('./..')
 
-    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_xyz/"
+    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_halfsphere/"
     # args.data_dir = "/media/sunting/sun/kiti_sequence/01/"
     args.save_path = "mask_w_color"
     args.use_depth = False

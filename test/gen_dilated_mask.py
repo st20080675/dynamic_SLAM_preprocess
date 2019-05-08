@@ -13,8 +13,8 @@ def get_image_list(data_dir, list_file):
         all_files = f.readlines()
         return [item.split() for item in all_files]
 
-def get_KITTI_image_list(data_dir, kitti_image_folder):
-    data_path = os.path.join(data_dir, kitti_image_folder)
+def get_KITTI_image_list(data_dir, seg_mask_path, kitti_image_folder):
+    data_path = os.path.join(data_dir, seg_mask_path, kitti_image_folder)
     file_list = glob.glob(data_path+'/*')
     file_list.sort()
     return file_list
@@ -25,27 +25,27 @@ if __name__=="__main__":
     sys.path.append('./..')
     flag_visualization = False
     args.associate_data_file = "associate_list.txt"
-    args.data_set = 'TUM'  #'TUM' # 'KITTI'
-    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_xyz/"
-    # args.data_dir = "/media/sunting/sun/kitti_sequence/01/"
-    args.kitti_image_folder = "image_0"
+    args.data_set = 'KITTI'  #'TUM' # 'KITTI'
+    # args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_halfsphere/"
+    args.data_dir = "/media/sunting/sun/kitti_sequence/10/"
+    args.kitti_image_folder = "image_1"
 
     seg_mask_path = 'mask_w_depth'
     save_mask_path = 'mask_dilated_w_depth'
     move_class = [15] # [5, 9, 15]
 
     if args.data_set == 'KITTI':
-        file_list = get_KITTI_image_list(args.data_dir, args.kitti_image_folder)
-        move_class = [1,2,6,7,14,15]
         seg_mask_path = 'mask_w_color'
         save_mask_path = 'mask_dilated_w_color'
+        file_list = get_KITTI_image_list(args.data_dir, seg_mask_path, args.kitti_image_folder)
+        move_class = [1,2,6,7,14,15]
+
         save_dir = os.path.join(args.data_dir, save_mask_path, args.kitti_image_folder)
         if not os.path.exists(save_dir):
             os.makedirs(save_dir, exist_ok=True)
 
         for i_img in file_list:
-            mask_name = os.path.join(args.data_dir, seg_mask_path, i_img[-18:])
-            mask = ndimage.imread(mask_name)
+            mask = ndimage.imread(i_img)
             mask_combine = np.zeros(mask.shape, dtype='uint8')
 
             for i_class in move_class:
