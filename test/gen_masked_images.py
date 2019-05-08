@@ -7,6 +7,7 @@ import os
 import matplotlib.pyplot as plt
 import scipy.ndimage as ndimage
 import glob
+import time
 
 def get_TUM_image_list(data_dir, list_file):
      with open(os.path.join(data_dir, list_file), "r") as f:
@@ -27,13 +28,13 @@ if __name__=="__main__":
     args.data_set = 'KITTI'  #'TUM' # 'KITTI'
     # args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_xyz/"
     args.data_dir = "/data_shared/Docker/tsun/docker/program/dynamic_SLAM_preprocess/data/KITTI/01"
-    args.kitti_image_folder = "image_1"
+    args.kitti_image_folder = "image_0"
 
     blur_img_path = 'blurred'
-    seg_mask_path = 'mask_w_depth'
-    save_masked_path = 'masked_w_depth'
+    seg_mask_path = 'mask_w_color'
+    save_masked_path = 'masked_w_color'
     move_class = [15] # [5, 9, 15]
-
+    start_time = time.time()
     if args.data_set == 'KITTI':
         file_list = get_KITTI_image_list(args.data_dir, args.kitti_image_folder)
         move_class = [1,2,6,7,14,15]
@@ -42,7 +43,7 @@ if __name__=="__main__":
         save_dir = os.path.join(args.data_dir, save_masked_path, args.kitti_image_folder)
         if not os.path.exists(save_dir):
             os.makedirs(save_dir, exist_ok=True)
-
+        print(len(file_list))
         for i_img in file_list:
             img_name = os.path.join(args.data_dir, i_img)
             mask_name = os.path.join(args.data_dir, seg_mask_path, i_img[-18:])
@@ -58,10 +59,11 @@ if __name__=="__main__":
 
             rows, cols = mask.shape
             gray_pixel = np.array([128], dtype='uint8')
-            for i in range(0, rows):
-                for j in range(0, cols):
-                    if mask_combine[i, j] > 0:
-                        img[i,j] = gray_pixel
+            img[mask_combine>0] = gray_pixel
+            #for i in range(0, rows):
+             #   for j in range(0, cols):
+              #      if mask_combine[i, j] > 0:
+               #         img[i,j] = gray_pixel
 
             if flag_visualization:
                 plt.subplot(1,3,1)
@@ -72,12 +74,12 @@ if __name__=="__main__":
                 plt.imshow(img)
 
             img_masked = Image.fromarray(img)
-            img_masked.save('{}{}/{}'.format(args.data_dir, save_masked_path, i_img[-18:]))
+            img_masked.save('{}/{}/{}'.format(args.data_dir, save_masked_path, i_img[-18:]))
 
 
     elif args.data_set == 'TUM':
         file_list = get_TUM_image_list(args.data_dir, args.associate_data_file)
-	save_dir = os.path.join(args.data_dir, save_masked_path, 'rgb')
+        save_dir = os.path.join(args.data_dir, save_masked_path, 'rgb')
         if not os.path.exists(save_dir):
             os.makedirs(save_dir, exist_ok=True)
 
@@ -120,6 +122,8 @@ if __name__=="__main__":
 
             img_masked = Image.fromarray(img)
             img_masked.save('{}{}/{}'.format(args.data_dir, save_masked_path, i_img[1]))
+
+    print(time.time()-start_time)
 
 
 
