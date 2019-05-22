@@ -25,13 +25,13 @@ if __name__=="__main__":
     sys.path.append('./..')
     flag_visualization = False
     args.associate_data_file = "associate_list.txt"
-    args.data_set = 'KITTI'  #'TUM' # 'KITTI'
-    # args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_halfsphere/"
-    args.data_dir = "/media/sunting/sun/kitti_sequence/10/"
+    args.data_set = 'TUM'  #'TUM' # 'KITTI'
+    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_walking_static_validation/"
+    # args.data_dir = "/media/sunting/sun/kitti_sequence/10/"
     args.kitti_image_folder = "image_1"
 
-    seg_mask_path = 'mask_w_depth'
-    save_mask_path = 'mask_dilated_w_depth'
+    seg_mask_path = 'mask_w_color_depth'
+    save_mask_path = 'mask_dilated_w_color_depth'
     move_class = [15] # [5, 9, 15]
 
     if args.data_set == 'KITTI':

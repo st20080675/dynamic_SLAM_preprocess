@@ -27,7 +27,7 @@ if __name__=="__main__":
     flag_mask_method = 'gray' # blur (gaussain)
 
     args.data_set = 'TUM'  #'TUM' # 'KITTI'
-    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_sitting_halfsphere/"
+    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_walking_static_validation/"
     # args.data_dir = "/data_shared/Docker/tsun/docker/program/dynamic_SLAM_preprocess/data/KITTI/01"
     # args.data_dir = "/media/sunting/sun/kitti_sequence/04/"
     args.kitti_image_folder = "image_1"
