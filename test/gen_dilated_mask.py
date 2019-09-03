@@ -24,19 +24,25 @@ if __name__=="__main__":
     args = get_args()
     sys.path.append('./..')
     flag_visualization = False
+    flag_dilate = False
     args.associate_data_file = "associate_list.txt"
-    args.data_set = 'TUM'  #'TUM' # 'KITTI'
-    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_walking_static_validation/"
-    # args.data_dir = "/media/sunting/sun/kitti_sequence/10/"
+    args.data_set = 'KITTI'  #'TUM' # 'KITTI'
+    # args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg2_desk_with_person_validation/"
+    args.data_dir = "/media/sunting/sun/kitti_sequence/10/"
     args.kitti_image_folder = "image_1"
 
     seg_mask_path = 'mask_w_color_depth'
-    save_mask_path = 'mask_dilated_w_color_depth'
+    save_mask_path = 'binary_mask_w_color_depth'
     move_class = [15] # [5, 9, 15]
 
     if args.data_set == 'KITTI':
         seg_mask_path = 'mask_w_color'
         save_mask_path = 'mask_dilated_w_color'
+        if flag_dilate:
+            save_mask_path = 'mask_dilated_w_color'
+        else:
+            save_mask_path = 'binary_mask_w_color'
+
         file_list = get_KITTI_image_list(args.data_dir, seg_mask_path, args.kitti_image_folder)
         move_class = [1,2,6,7,14,15]
 
@@ -51,8 +57,12 @@ if __name__=="__main__":
             for i_class in move_class:
                 mask_combine[mask==i_class] = 1
 
-            struct = ndimage.generate_binary_structure(2, 2)
-            dilated_mask = ndimage.binary_dilation(mask_combine, structure = struct ,iterations=2).astype(mask_combine.dtype)
+            if flag_dilate:
+                struct = ndimage.generate_binary_structure(2, 2)
+                dilated_mask = ndimage.binary_dilation(mask_combine, structure = struct ,iterations=2).astype(mask_combine.dtype)
+                # dilated_mask[mask_combine>0] = 0
+            else:
+                dilated_mask = mask_combine
 
             if flag_visualization:
                 plt.subplot(1,3,1)
@@ -80,9 +90,12 @@ if __name__=="__main__":
             for i_class in move_class:
                 mask_combine[mask==i_class] = 1
 
-            struct = ndimage.generate_binary_structure(2, 2)
-            dilated_mask = ndimage.binary_dilation(mask_combine, structure = struct ,iterations=2).astype(mask_combine.dtype)
-            # dilated_mask[mask_combine>0] = 0
+            if flag_dilate:
+                struct = ndimage.generate_binary_structure(2, 2)
+                dilated_mask = ndimage.binary_dilation(mask_combine, structure = struct ,iterations=2).astype(mask_combine.dtype)
+                # dilated_mask[mask_combine>0] = 0
+            else:
+                dilated_mask = mask_combine
 
             if flag_visualization:
                 plt.subplot(1,3,1)

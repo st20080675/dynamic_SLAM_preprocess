@@ -26,11 +26,11 @@ if __name__=="__main__":
     flag_visualization = False
     flag_mask_method = 'gray' # blur (gaussain)
 
-    args.data_set = 'TUM'  #'TUM' # 'KITTI'
-    args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_walking_static_validation/"
+    args.data_set = 'KITTI'  #'TUM' # 'KITTI'
+    # args.data_dir = "/home/sunting/Documents/semantic_SLAM/dataset/tum/dynamic_objects/rgbd_dataset_freiburg3_walking_static_validation/"
     # args.data_dir = "/data_shared/Docker/tsun/docker/program/dynamic_SLAM_preprocess/data/KITTI/01"
-    # args.data_dir = "/media/sunting/sun/kitti_sequence/04/"
-    args.kitti_image_folder = "image_1"
+    args.data_dir = "/media/sunting/sun/kitti_sequence/04/"
+    args.kitti_image_folder = "image_0"
 
     blur_img_path = 'blurred'
     seg_mask_path = 'mask_w_color'
